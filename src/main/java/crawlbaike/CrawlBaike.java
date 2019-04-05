@@ -121,7 +121,7 @@ public class CrawlBaike {
             LinkedHashMap<String, String> map = null;
             Document doc = Jsoup.connect(url).get();
             Elements es = doc.getElementsByClass("abstract_tbl");
-            String[] strArr = es.text().replaceAll("\\s?\\[.+?]\\s?", "").split("\\s{3,30}");
+            String[] strArr = es.text().replaceAll("\\s?\\[.+?]\\s?", "").split("\\s{3}");
             if (strArr.length > 0) {
                 map = new LinkedHashMap<>();
                 for (int i = 0; i < strArr.length; i += 2) {

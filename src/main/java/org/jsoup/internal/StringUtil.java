@@ -15,8 +15,8 @@ import java.util.Stack;
 public final class StringUtil {
     // memoised padding up to 21
     static final String[] padding = {"", " ", "  ", "   ", "    ", "     ", "      ", "       ", "        ",
-        "         ", "          ", "           ", "            ", "             ", "              ", "               ",
-        "                ", "                 ", "                  ", "                   ", "                    "};
+            "         ", "          ", "           ", "            ", "             ", "              ", "               ",
+            "                ", "                 ", "                  ", "                   ", "                    "};
 
     /**
      * Join a collection of strings by a separator
@@ -180,7 +180,7 @@ public final class StringUtil {
         final int len = haystack.length;
         for (int i = 0; i < len; i++) {
             if (haystack[i].equals(needle))
-            return true;
+                return true;
         }
         return false;
     }
@@ -242,8 +242,8 @@ public final class StringUtil {
     public static StringBuilder borrowBuilder() {
         synchronized (builders) {
             return builders.empty() ?
-                new StringBuilder(MaxCachedBuilderSize) :
-                builders.pop();
+                    new StringBuilder(MaxCachedBuilderSize) :
+                    builders.pop();
         }
     }
 

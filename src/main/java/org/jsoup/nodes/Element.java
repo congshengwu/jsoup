@@ -655,7 +655,7 @@ public class Element extends Node {
         selector.insert(0, " > ");
         if (parent().select(selector.toString()).size() > 1)
             selector.append(String.format(
-                ":nth-child(%d)", elementSiblingIndex() + 1));
+                    ":nth-child(%d)", elementSiblingIndex() + 1));
 
         return parent().cssSelector() + selector.toString();
     }
@@ -755,8 +755,8 @@ public class Element extends Node {
      * @return position in element sibling list
      */
     public int elementSiblingIndex() {
-       if (parent() == null) return 0;
-       return indexInList(this, parent().childElementsList());
+        if (parent() == null) return 0;
+        return indexInList(this, parent().childElementsList());
     }
 
     /**
@@ -1065,8 +1065,15 @@ public class Element extends Node {
                 } else if (node instanceof Element) {
                     Element element = (Element) node;
                     if (accum.length() > 0 &&
-                        (element.isBlock() || element.tag.getName().equals("br")))
-                        accum.append("   ");
+                            (element.isBlock() || element.tag.getName().equals("br")) &&
+                            !TextNode.lastCharIsWhitespace(accum)) {
+                        int lastWithSpace = accum.toString().lastIndexOf(' ');
+                        if (lastWithSpace != -1) {
+                            accum.replace(lastWithSpace, lastWithSpace + 1, "   ");
+                        }
+                        accum.append("  ");
+                        accum.append(' ');
+                    }
                 }
             }
 
@@ -1074,8 +1081,9 @@ public class Element extends Node {
                 // make sure there is a space between block tags and immediately following text nodes <div>One</div>Two should be "One Two".
                 if (node instanceof Element) {
                     Element element = (Element) node;
-                    if (element.isBlock() && (node.nextSibling() instanceof TextNode) && !TextNode.lastCharIsWhitespace(accum))
+                    if (element.isBlock() && (node.nextSibling() instanceof TextNode) && !TextNode.lastCharIsWhitespace(accum)) {
                         accum.append(' ');
+                    }
                 }
 
             }
@@ -1139,8 +1147,9 @@ public class Element extends Node {
     private static void appendNormalisedText(StringBuilder accum, TextNode textNode) {
         String text = textNode.getWholeText();
 
-        if (preserveWhitespace(textNode.parentNode) || textNode instanceof CDataNode)
+        if (preserveWhitespace(textNode.parentNode) || textNode instanceof CDataNode) {
             accum.append(text);
+        }
         else
             StringUtil.appendNormalisedWhitespace(accum, text, TextNode.lastCharIsWhitespace(accum));
     }
@@ -1248,9 +1257,9 @@ public class Element extends Node {
      * @return set of classnames, empty if no class attribute
      */
     public Set<String> classNames() {
-    	String[] names = classSplit.split(className());
-    	Set<String> classNames = new LinkedHashSet<>(Arrays.asList(names));
-    	classNames.remove(""); // if classNames() was empty, would include an empty class
+        String[] names = classSplit.split(className());
+        Set<String> classNames = new LinkedHashSet<>(Arrays.asList(names));
+        classNames.remove(""); // if classNames() was empty, would include an empty class
 
         return classNames;
     }
@@ -1414,7 +1423,7 @@ public class Element extends Node {
             accum.append('>');
     }
 
-	void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
+    void outerHtmlTail(Appendable accum, int depth, Document.OutputSettings out) throws IOException {
         if (!(childNodes.isEmpty() && tag.isSelfClosing())) {
             if (out.prettyPrint() && (!childNodes.isEmpty() && (
                     tag.formatAsBlock() || (out.outline() && (childNodes.size()>1 || (childNodes.size()==1 && !(childNodes.get(0) instanceof TextNode))))
